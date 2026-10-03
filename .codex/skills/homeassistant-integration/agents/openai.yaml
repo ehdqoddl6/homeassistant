@@ -1,0 +1,4 @@
+interface:
+  display_name: "Home Assistant 기기·컴포넌트 연동"
+  short_description: "기기와 커스텀 컴포넌트의 호환성·연동·문제 해결 및 기록"
+  default_prompt: "$homeassistant-integration 대상 기기와 컴포넌트의 호환성을 확인하고 연동 작업과 검증 결과를 기록해줘."

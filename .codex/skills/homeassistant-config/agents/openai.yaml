@@ -1,0 +1,4 @@
+interface:
+  display_name: "Home Assistant 설정·자동화"
+  short_description: "홈어시스턴트 YAML 설정과 자동화 작성·검증·변경 기록"
+  default_prompt: "$homeassistant-config 현재 환경과 기존 설정을 확인하고 요청한 자동화 YAML을 작성한 뒤 검증 결과와 작업 이력을 남겨줘."

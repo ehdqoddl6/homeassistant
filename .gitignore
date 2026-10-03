@@ -1,0 +1,38 @@
+# Local editor / OS files
+.idea/
+.vscode/
+.DS_Store
+
+# Credentials and private working material
+secrets.yaml
+secrets.yml
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+private/
+
+# Home Assistant runtime state and backups
+.storage/
+.cloud/
+.HA_VERSION
+home-assistant.log*
+home-assistant_v2.db*
+*.db-shm
+*.db-wal
+backups/
+snapshots/
+deps/
+tts/
+
+# Python tools and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
