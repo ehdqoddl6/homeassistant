@@ -7,8 +7,8 @@
 
 | 항목 | 확인된 값 | 확인일 / 근거 |
 | --- | --- | --- |
-| Home Assistant 버전 | 미확인 | — |
-| 설치 방식 | 미확인 | — |
+| Home Assistant 버전 | Core 2026.9.3 / Supervisor 2026.9.3 / OS 18.3 | 2026-10-04 / 사용자 제공 Home Assistant 정보 화면 |
+| 설치 방식 | Home Assistant OS (Supervisor 포함) | 2026-10-04 / 사용자 제공 Home Assistant 정보 화면 |
 | 호스트 / 하드웨어 | 미확인 | — |
 | 서버 설정 경로 | 미확인 | — |
 | 설정 관리 방식 (UI / 파일) | 미확인 | — |
