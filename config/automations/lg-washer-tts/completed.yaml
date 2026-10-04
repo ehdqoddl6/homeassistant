@@ -1,0 +1,17 @@
+alias: 세탁기 완료 TTS 알림
+description: ''
+triggers:
+  - trigger: state
+    entity_id: event.setaggi_notification
+conditions: []
+actions:
+  - action: tts.speak
+    target:
+      entity_id: tts.google_ai_tts
+    data:
+      cache: true
+      media_player_entity_id: media_player.geosil
+      options:
+        voice: Leda
+      message: 세탁을 종료합니다
+mode: single

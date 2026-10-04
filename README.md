@@ -15,6 +15,7 @@
 ## 현재 상태
 
 2026-10-03 기준 프로젝트 문서와 스킬을 초기 구성했다.
+2026-10-04 자동화별 보관 폴더를 만들었다. 세탁기 10분 전 알림은 사용자 테스트 성공을 기록했고, 평일·일요일 브리핑은 자연스러운 말투를 위한 instructions 수정본을 보관했다.
 실제 Home Assistant 설정 파일과 실행 환경은 아직 연결하지 않았다.
 설치 방식, 버전, 기기 목록은 [환경 기록](docs/environment.md)에 확인된 내용부터 추가한다.
 
@@ -24,6 +25,7 @@
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | 프로젝트 작업 원칙, 스킬 선택, 히스토리 기록 규칙 |
 | [config/](config/README.md) | 버전 관리할 Home Assistant 설정과 코드 |
+| [config/automations/](config/automations/README.md) | 자동화별 YAML, 적용 상태와 작업 기록 링크 |
 | [docs/environment.md](docs/environment.md) | 확인된 설치 환경과 장비·연동 정보 |
 | [docs/history/](docs/history/README.md) | 날짜별 작업 기록과 목록 |
 | [docs/templates/change.md](docs/templates/change.md) | 설정·연동·문제 해결 기록 양식 |
@@ -57,9 +59,9 @@ $homeassistant-blog 이번 연동 작업 기록으로 구축기 초안을 작성
 ## 기록 흐름
 
 1. 환경 기록과 관련 작업 이력을 읽는다.
-2. 설정·코드를 수정하거나 조사 결과를 정리한다.
+2. 설정·코드를 수정하거나 조사 결과를 정리한다. 자동화는 `config/automations/<주제>/`에 YAML과 README를 함께 보관한다.
 3. 가능한 검증을 수행하고 미검증 항목을 구분한다.
-4. `docs/history/YYYY-MM-DD-주제.md`에 결과를 남기고 목록에 연결한다.
+4. `docs/history/YYYY-MM-DD-주제.md`에 결과를 남기고 목록에 연결한다. 자동화 작업은 해당 폴더의 README에도 기록 링크를 추가한다.
 5. 구축기 작성 요청이 있으면 관련 기록을 바탕으로 `blog/YYYY-MM-DD-주제.md`를 작성한다.
 
 로컬 파일 작성, Home Assistant 구성 검사, 실기기 동작 확인은 각각 구분해 기록한다.

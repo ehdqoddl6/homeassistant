@@ -1,0 +1,193 @@
+alias: 일요일 브리핑
+description: 날씨/일정/환율 데이터 요약해서 구글 홈 미니로 출력
+triggers:
+  - at: '07:40:00'
+    trigger: time
+    weekday:
+      - sun
+conditions:
+  - condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+      - sun
+actions:
+  - variables:
+      success: false
+      calendar_events: {}
+  - action: calendar.get_events
+    target:
+      entity_id:
+        - calendar.gajog
+        - calendar.gajog_2
+        - calendar.ice
+        - calendar.jigjang
+        - calendar.kaelrindeo
+    data:
+      start_date_time: '{{ now().strftime(''%Y-%m-%d 00:00:00'') }}'
+      duration:
+        hours: 24
+    response_variable: calendar_events
+    continue_on_error: true
+  - variables:
+      schedule_text: >-
+        {%- set ns = namespace(lines=[], failed=false) -%}
+        {%- set expected = ['calendar.gajog', 'calendar.gajog_2', 'calendar.ice', 'calendar.jigjang', 'calendar.kaelrindeo'] -%}
+        {%- set responses = calendar_events if calendar_events is defined and calendar_events is mapping else {} -%}
+        {%- for entity_id in expected -%}
+          {%- set cal = responses.get(entity_id, {}) -%}
+          {%- if cal is mapping and cal.events is defined and cal.events is sequence and cal.events is not string and cal.events is not mapping -%}
+            {%- for event in cal.events -%}
+              {%- if event is mapping -%}
+                {%- set summary = event.summary | default('제목 없음', true) -%}
+                {%- set start = event.start | default('', true) -%}
+                {%- set location = event.location | default('', true) -%}
+                {%- set line = '- ' ~ summary -%}
+                {%- if start %}{% set line = line ~ ' (' ~ start ~ ')' %}{% endif -%}
+                {%- if location %}{% set line = line ~ ' @ ' ~ location %}{% endif -%}
+                {%- set ns.lines = ns.lines + [line] -%}
+              {%- else -%}
+                {%- set ns.failed = true -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- set ns.failed = true -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if ns.lines -%}
+          {{ ns.lines | join('\n') }}
+          {%- if ns.failed -%}{{ '\n일부 캘린더의 일정 정보를 가져오지 못했어.' }}{%- endif -%}
+        {%- elif ns.failed -%}
+          일정 정보를 가져오지 못했어
+        {%- else -%}
+          등록된 일정 없음
+        {%- endif -%}
+  - repeat:
+      count: 3
+      sequence:
+        - action: ai_task.generate_data
+          data_template:
+            entity_id: ai_task.google_ai_task
+            task_name: 주식브리핑
+            instructions: >-
+              아래 자료를 참고해서 스피커로 읽을 자연스러운 일요일 아침 브리핑을 작성해줘.
+              자료의 항목명과 표기 형식은 그대로 읽지 말고, 옆에서 이야기하듯 문장으로 풀어줘.
+
+              오늘 날짜는 {{ now().strftime('%m월 %d일') }}이야.
+
+              [날씨] 위치: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_wici') }} 현재: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaenalssi')
+              }} 기온:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaeondo')
+              }}°C 체감온도:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_cegamondo') }}°C
+              오늘 최저/최고:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_coejeoondo') }}°C
+              ~ {{ states('sensor.naver_weather_hopyeongdong_nalssi_coegoondo')
+              }}°C 습도:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaeseubdo')
+              }}% 강수확률:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_gangsuhwagryul')
+              }}% 바람: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaepunghyang')
+              }} {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaepungsog')
+              }}m/s 통합대기:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_tonghabdaegi') }}
+              미세먼지: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_misemeonji')
+              }}㎍/㎥  {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_misemeonjideunggeub')
+              }} 초미세먼지: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_comisemeonji')
+              }}㎍/㎥ {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_comisemeonjideunggeub')
+              }} 자외선: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_jaoeseondeunggeub')
+              }}
+
+              [오늘 일정] {{ schedule_text | default('일정 정보를 가져오지 못했어', true) }}
+
+              [환율] - 원달러: {{ states('sensor.yahoofinance_krw_x') |
+              default('N/A') }}원
+
+              오빠에게 다정하고 친근한 반말로 이야기하는 일요일 아침 원고를 작성해줘.
+              출력은 스피커가 실제로 말할 문장만 적어줘. 제목, 소제목, 번호, 글머리표, 콜론,
+              괄호 설명이나 마크다운은 넣지 마. '날씨 브리핑을 시작합니다' 같은 형식적인 안내도 생략해줘.
+              '기온: ...도', '습도: ...퍼센트', '환율: ...원'처럼 항목과 값을 나열하지 말고,
+              '지금 기온은 ...도이고', '습도는 ...퍼센트 정도야'처럼 조사와 서술어를 갖춘 문장으로 말해줘.
+              짧은 문장을 기본으로 관련된 정보끼리 연결하고, 같은 어미나 '그리고'를 반복하지 마.
+              '오빠'는 짧은 인사나 마무리에 자연스럽게 쓰되 매 문장 넣지 마.
+              말투 예시의 말줄임표와 대괄호는 읽지 말고, 제공된 실제 값으로 채워줘.
+
+              짧게 인사한 뒤 현재 날씨와 기온부터 자연스럽게 이야기해줘.
+              '오늘은 [날씨]이고, 지금 기온은 [현재 기온]도야. 오늘은 최저 [최저기온]도에서
+              최고 [최고기온]도 사이를 오가겠어.'처럼 풀어서 말하되 예시 문장을 매번 똑같이 반복하지 마.
+              강수확률과 습도도 '비가 올 확률은 [강수확률]퍼센트이고, 습도는 [습도]퍼센트 정도야'처럼 연결해줘.
+              현재 날씨와 기온, 최저·최고기온, 강수확률, 습도, 미세먼지와 초미세먼지 상태는
+              값이 유효하면 모두 포함해줘. 기온은 '도', 확률과 습도는 '퍼센트'로 읽어줘.
+              미세먼지는 '미세먼지: 좋음' 대신 '미세먼지는 좋은 편이야'처럼 말하고,
+              초미세먼지도 같은 등급일 때만 '둘 다 좋은 편이야'처럼 묶어줘.
+              체감온도, 바람, 자외선은 외출 팁에 도움이 될 때만 짧게 덧붙여줘.
+              날씨 설명 끝에는 제공된 정보에 맞는 옷차림, 우산, 산책이나 환기 팁을 한마디만 더해줘.
+              실제 시간대별 예보는 없으므로 비가 오는 시각이나 오후 날씨 변화를 추측하지 마.
+
+              날씨 다음에는 오늘 일정을 짧고 자연스럽게 알려줘.
+              '오전 [시각]에는 [일정]이 있고, 오후에는 [일정]이 예정돼 있어'처럼 시작 시각과 할 일을 연결해줘.
+              종일 일정에는 임의로 시간을 붙이지 말고, 장소는 필요할 때만 짧게 덧붙여줘.
+              날짜·시간 원문이나 목록 기호를 그대로 읽지 말고, 같은 일정은 중복해서 말하지 마.
+              [오늘 일정]이 '등록된 일정 없음'이면 '오늘은 등록된 일정이 없어'라고 한 문장으로 알려줘.
+              조회 실패로 표시되면 '오늘 일정은 지금 확인이 어려워'라고 짧게 말하고 일정이 없다고 단정하지 마.
+              일부 캘린더만 조회됐다면 확인된 일정은 알려주고, 일부 일정은 확인하지 못했다고 한마디 덧붙여줘.
+
+              이어서 원달러 환율을 '환율은 달러당 [환율]원 수준이야'처럼 한 문장으로 간단히 알려줘.
+              환율의 전일 대비 등락이나 전망, 주식과 시황 이야기는 덧붙이지 마.
+              입력에 시세 시각이 없으므로 실시간 환율이라고 단정하지 마.
+
+              데이터가 unknown, unavailable, None, N/A 또는 빈 값이면 숫자를 만들어내거나 0으로 바꾸지 마.
+              필요한 정보는 '지금 확인이 어려워'라고 짧게 말하고 확인 가능한 정보로 이어가줘.
+              이 규칙은 날씨 항목을 모두 포함하라는 규칙보다 우선해.
+
+              오늘은 일요일이니까 출근, 업무, 월요일 준비를 재촉하는 이야기는 하지 마.
+              마지막에는 편안하고 기분 좋은 휴일을 보내라는 따뜻한 한 문장으로 마무리해줘.
+          response_variable: gemini_response
+          continue_on_error: true
+        - if:
+            - condition: template
+              value_template: >-
+                {{ gemini_response is defined and gemini_response.data is
+                defined }}
+          then:
+            - action: tts.speak
+              target:
+                entity_id: tts.google_ai_tts
+              data:
+                media_player_entity_id: media_player.geosil
+                message: '{{ gemini_response.data }}'
+                options:
+                  voice: Leda
+                cache: false
+            - variables:
+                success: true
+            - stop: 성공
+        - delay:
+            seconds: 2
+  - if:
+      - condition: template
+        value_template: '{{ not success }}'
+    then:
+      - action: tts.speak
+        target:
+          entity_id: tts.google_ai_tts
+        data:
+          media_player_entity_id: media_player.geosil
+          message: 오늘 아침 브리핑을 가져오지 못했어. 잠시 후 다시 확인해줘!
+          options:
+            voice: Leda
+          cache: false
+mode: single

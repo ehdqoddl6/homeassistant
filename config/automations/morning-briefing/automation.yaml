@@ -1,0 +1,284 @@
+alias: 평일 아침 브리핑
+description: 날씨/주식/일정 데이터 요약해서 구글 홈 미니로 출력
+triggers:
+  - at: '07:03:30'
+    trigger: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+conditions:
+  - condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+      - sun
+actions:
+  - variables:
+      success: false
+  - action: calendar.get_events
+    target:
+      entity_id:
+        - calendar.gajog
+        - calendar.gajog_2
+        - calendar.ice
+        - calendar.jigjang
+        - calendar.kaelrindeo
+    data:
+      start_date_time: '{{ now().strftime(''%Y-%m-%d 00:00:00'') }}'
+      duration:
+        hours: 24
+    response_variable: calendar_events
+    continue_on_error: true
+  - variables:
+      schedule_text: >-
+        {%- set ns = namespace(lines=[]) -%} {%- if calendar_events is defined
+        and calendar_events is mapping -%}
+          {%- for entity_id, cal in calendar_events.items() -%}
+            {%- set events = cal.events if (cal is mapping and cal.events is defined and cal.events is iterable) else [] -%}
+            {%- for event in events -%}
+              {%- set summary = event.summary | default('제목 없음', true) -%}
+              {%- set start = event.start | default('', true) -%}
+              {%- set location = event.location | default('', true) -%}
+              {%- set line = '- ' ~ summary -%}
+              {%- if start %}{% set line = line ~ ' (' ~ start ~ ')' %}{% endif -%}
+              {%- if location %}{% set line = line ~ ' @ ' ~ location %}{% endif -%}
+              {%- set ns.lines = ns.lines + [line] -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        {%- endif -%} {{ ns.lines | join('\n') if ns.lines else '등록된 일정 없음' }}
+  - repeat:
+      count: 3
+      sequence:
+        - action: ai_task.generate_data
+          data_template:
+            entity_id: ai_task.google_ai_task
+            task_name: 주식브리핑
+            instructions: >-
+              아래 자료를 참고해서 스피커로 바로 읽을 한국어 아침 브리핑 원고를 작성해줘.
+              자료의 항목명과 표기 형식을 그대로 읽지 말고, 옆에서 이야기하듯 완성된 문장으로 풀어줘.
+
+              오늘 날짜는 {{ now().strftime('%m월 %d일') }}이고, 오늘 요일은 {{
+              ['월요일','화요일','수요일','목요일','금요일','토요일','일요일'][now().weekday()] }}이야.
+
+              [날씨] 위치: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_wici') }} 현재: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaenalssi')
+              }} 기온:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaeondo')
+              }}°C 체감온도:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_cegamondo') }}°C
+              오늘 최저/최고:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_coejeoondo') }}°C
+              ~ {{ states('sensor.naver_weather_hopyeongdong_nalssi_coegoondo')
+              }}°C 습도:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaeseubdo')
+              }}% 강수확률:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_gangsuhwagryul')
+              }}% 바람: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaepunghyang')
+              }} {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_hyeonjaepungsog')
+              }}m/s 통합대기:{{
+              states('sensor.naver_weather_hopyeongdong_nalssi_tonghabdaegi') }}
+              미세먼지: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_misemeonji')
+              }}㎍/㎥  {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_misemeonjideunggeub')
+              }} 초미세먼지: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_comisemeonji')
+              }}㎍/㎥ {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_comisemeonjideunggeub')
+              }} 자외선: {{
+              states('sensor.naver_weather_hopyeongdong_nalssi_jaoeseondeunggeub')
+              }}
+
+
+
+              [오늘 일정] {{ schedule_text | default('일정 정보를 가져오지 못했어', true) }}
+
+              [환율] - 원달러: {{ states('sensor.yahoofinance_krw_x') |
+              default('N/A') }}원
+
+              [시장 심리] - 공포지수(VIX): {{ states('sensor.yahoofinance_vix')
+              }}              (전일대비 {{
+              state_attr('sensor.yahoofinance_vix','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              - 미국 10년물 국채금리: {{ states('sensor.yahoofinance_tnx') }} (전일대비 {{
+              state_attr('sensor.yahoofinance_tnx','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+
+
+              [섹터 ETF] - 반도체(SOXX): {{ states('sensor.yahoofinance_soxx') }}
+              (전일대비 {{
+              state_attr('sensor.yahoofinance_soxx','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              - 기술(XLK): {{ states('sensor.yahoofinance_xlk') }} (전일대비 {{
+              state_attr('sensor.yahoofinance_xlk','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              - 금융(XLF): {{ states('sensor.yahoofinance_xlf') }} (전일대비 {{
+              state_attr('sensor.yahoofinance_xlf','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              - 에너지(XLE): {{ states('sensor.yahoofinance_xle') }} (전일대비 {{
+              state_attr('sensor.yahoofinance_xle','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              - 헬스케어(XLV): {{ states('sensor.yahoofinance_xlv') }} (전일대비 {{
+              state_attr('sensor.yahoofinance_xlv','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              - 경기소비재(XLY): {{ states('sensor.yahoofinance_xly') }} (전일대비 {{
+              state_attr('sensor.yahoofinance_xly','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              [미국 주요 지수]   - 나스닥 100: {{ states('sensor.yahoofinance_ndx')}}
+              (전일대비
+              {{state_attr('sensor.yahoofinance_ndx','regularMarketChangePercent')
+              | default(0) | round(2) }}%)   - S&P500: {{
+              states('sensor.yahoofinance_gspc')}} (전일대비
+              {{state_attr('sensor.yahoofinance_gspc','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              [개별 종목]   - 버노바(GEV): {{ states('sensor.yahoofinance_gev') }} 달러
+              (전일대비
+              {{state_attr('sensor.yahoofinance_gev','regularMarketChangePercent')
+              | default(0) | round(2) }}%)   - 플래닛랩스(PL): {{
+              states('sensor.yahoofinance_pl')}} 달러 (전일대비
+              {{state_attr('sensor.yahoofinance_pl','regularMarketChangePercent')
+              | default(0) | round(2) }}%)   - 샌디스크(SNDK): {{
+              states('sensor.yahoofinance_sndk') }} 달러
+              (전일대비{{state_attr('sensor.yahoofinance_sndk','regularMarketChangePercent')
+              | default(0) | round(2) }}%)   - 마이크론(MU): {{
+              states('sensor.yahoofinance_mu')}} 달러 (전일대비
+              {{state_attr('sensor.yahoofinance_mu','regularMarketChangePercent')
+              | default(0) | round(2) }}%)   - 엔비디아(NVDA): {{
+              states('sensor.yahoofinance_nvda') }} 달러
+              (전일대비{{state_attr('sensor.yahoofinance_nvda','regularMarketChangePercent')
+              | default(0) | round(2) }}%)   - 구글(GOOGL): {{
+              states('sensor.yahoofinance_googl') }} 달러
+              (전일대비{{state_attr('sensor.yahoofinance_googl','regularMarketChangePercent')
+              | default(0) | round(2) }}%)   - 테슬라(TSLA): {{
+              states('sensor.yahoofinance_tsla') }} 달러
+              (전일대비{{state_attr('sensor.yahoofinance_tsla','regularMarketChangePercent')
+              | default(0) | round(2) }}%) - SK하이닉스: {{
+              states('sensor.yahoofinance_skhy') }} 달러 (전일대비 {{
+              state_attr('sensor.yahoofinance_skhy','regularMarketChangePercent')
+              | default(0) | round(2) }}%) - SCHD: {{
+              states('sensor.yahoofinance_schd') }} 달러 (전일대비 {{
+              state_attr('sensor.yahoofinance_schd','regularMarketChangePercent')
+              | default(0) | round(2) }}%) - JEPQ: {{
+              states('sensor.yahoofinance_jepq') }} 달러 (전일대비 {{
+              state_attr('sensor.yahoofinance_jepq','regularMarketChangePercent')
+              | default(0) | round(2) }}%)
+
+              말투와 출력 형식:
+              오빠에게 다정하고 친근한 반말로 이야기해줘. '오빠'는 인사나 마무리에 자연스럽게 쓰고 매 문장 반복하지 마.
+              출력은 실제로 말할 원고만 작성해줘. 제목, 소제목, 항목명, 번호, 글머리표, 콜론, 괄호 설명,
+              마크다운, 작성 과정에 대한 설명은 넣지 마. 문단은 내용이 바뀔 때만 나눠줘.
+              '기온: ...도', '습도: ...퍼센트', '엔비디아: ...달러'처럼 항목과 값을 나열하지 마.
+              '지금 기온은 ...도이고', '습도는 ...퍼센트 정도야', '엔비디아는 ...달러를 기록했어'처럼
+              조사와 서술어를 갖춘 문장으로 말해줘. 모든 문장을 똑같은 어미와 구조로 반복하지 말고,
+              '...이고', '...인데', '...한 편이야', '...했어'를 내용에 맞게 섞어줘.
+              짧은 문장을 기본으로 하고, 관련된 두세 가지 정보만 한 문장으로 연결해줘.
+              아래 말투 예시의 말줄임표나 대괄호는 출력하지 말고, 반드시 실제로 제공된 값으로 채워줘.
+
+              먼저 짧게 인사하고 날씨를 알려줘.
+              현재 날씨, 현재 기온, 오늘 최저·최고기온, 강수확률, 습도, 미세먼지와 초미세먼지 상태를
+              빠뜨리지 않되 자연스러운 두세 문장으로 풀어줘. 기온은 '도', 확률과 습도는 '퍼센트'로 읽어줘.
+              예를 들면 '오늘은 [날씨]이고, 지금 기온은 [현재 기온]도야. 오늘은 최저 [최저기온]도에서
+              최고 [최고기온]도 사이를 오가겠어. 비가 올 확률은 [강수확률]퍼센트이고,
+              습도는 [습도]퍼센트 정도야.'처럼 이야기해줘. 문장 예시를 매번 그대로 반복할 필요는 없어.
+              미세먼지 등급도 '미세먼지: 좋음' 대신 '미세먼지는 좋은 편이야'처럼 말해줘.
+              날씨 설명 끝에는 제공된 정보에 맞춰 우산이나 옷차림 같은 실용적인 팁을 한마디만 덧붙여줘.
+
+              이어서 오늘 일정이 있으면 시작 시각과 할 일을 짧게 연결해서 알려줘.
+              '오전 [시각]에는 [일정]이 있고, 오후에는 [일정]이 예정돼 있어'처럼 말해줘.
+              종일 일정에는 임의로 시간을 붙이지 말고, 날짜·시간 원문이나 기계적인 표기는 읽지 마.
+              등록된 일정이 없으면 일정 부분을 생략하고 자연스럽게 다음 이야기로 넘어가줘.
+
+              시장 이야기로 넘어갈 때는 '이어서 시장 소식도 전해줄게'처럼 짧게 연결해줘.
+              원달러 환율부터 '달러당 [환율]원 수준이야'라고 문장으로 알려주고,
+              나스닥 백과 에스앤피 오백의 전일 대비 등락률을 각각 설명해줘.
+              둘 다 올랐다면 함께 오른 흐름으로, 방향이 다르면 서로 다른 흐름으로 연결하되 실제 수치에 맞춰줘.
+              입력에 거래 시각이 없으므로 실시간 가격, 방금 마감한 가격, 오늘 장중 가격이라고 단정하지 마.
+
+              다음으로 공포지수와 미국 십 년물 국채금리의 수준과 전일 대비 변화를 문장으로 풀어줘.
+              시장 분위기는 제공된 지표가 보여주는 범위에서만 짧게 설명해줘.
+              국채금리 자체의 수준과 전일 대비 변화율을 구분하고, 변화율을 퍼센트포인트로 바꿔 말하지 마.
+              제공하지 않은 뉴스, 상승·하락 원인이나 시장 전망은 추측하지 마.
+              원유와 금은 현재 입력 자료에 가격이 없으므로 이번 원고에서 언급하지 마.
+
+              섹터는 반도체, 기술, 금융, 에너지, 헬스케어, 경기소비재 순으로 모두 짚어줘.
+              '반도체 쪽은 ...퍼센트 올랐고, 기술주도 ...퍼센트 상승했어. 반면 금융 쪽은 ...'처럼
+              같은 방향의 움직임은 묶고 다른 방향은 대비해서 자연스럽게 이야기해줘.
+              '반면'이나 '함께' 같은 연결 표현은 실제 등락 방향과 맞을 때만 써줘.
+              마지막에는 입력된 등락률을 비교해서 가장 강했던 섹터와 가장 약했던 섹터를 한 문장으로 정리해줘.
+
+              이어서 개별 종목과 배당 ETF를 입력 순서대로 빠짐없이 알려줘.
+              개별 종목 부분은 간단히만 말해줘. 종목당 한 문장으로 종목명, 가격, 전일 대비 등락률만 짧게 전달해줘.
+              기업 소개, 뉴스, 등락 원인, 전망, 투자 의견 등 부연 설명과 개별 종목 부분의 마무리 요약은 생략해줘.
+              각 종목의 가격과 전일 대비 등락률이 모두 유효하면 반드시 둘 다 포함하되, 고정된 문장을 반복하지 마.
+              '[종목명]은 전일보다 [등락률]퍼센트 올라 [가격]달러를 기록했어',
+              '[종목명]은 [가격]달러로, 전일 대비 [등락률]퍼센트 내렸어'처럼 문장 구조를 다양하게 써줘.
+              연속된 종목의 움직임이 비슷하면 '...도', 흐름이 다르면 '한편' 등으로 연결해줘.
+              하락률의 음수 부호를 중복해서 읽지 말고, '마이너스 ...퍼센트 하락' 대신 '...퍼센트 내렸어'라고 해줘.
+              종목명만 말하고 영문 티커나 괄호 안 기호는 읽지 마.
+              이름 대신 티커만 제공된 SCHD는 '슈드', JEPQ는 '제피큐'라는 호칭으로 불러줘.
+              가격 단위는 제공된 자료의 단위를 사용해줘.
+
+              데이터가 없거나 unknown, unavailable, None, N/A, 빈 값이면 숫자를 만들어내거나 0으로 바꾸지 마.
+              해당 값만 '지금 확인이 어려워'라고 짧게 말하고, 확인 가능한 나머지 정보로 이어가줘.
+              이 규칙은 모든 수치를 반드시 말하라는 규칙보다 우선해. 오르내림이 확인되지 않으면 방향도 추측하지 마.
+
+              월요일부터 토요일까지는 날씨, 일정, 환율, 미국 지수, 시장 심리, 섹터, 개별 종목 순서로 말해줘.
+              일요일에는 날씨와 일정만 말해줘.
+              평일에는 따뜻하게 출근을 응원하며 마무리하고, 출근하지 않는 토요일과 일요일에는
+              출근 이야기를 하지 말고 편안한 주말을 보내라는 인사로 마무리해줘.
+          response_variable: gemini_response
+          continue_on_error: true
+        - if:
+            - condition: template
+              value_template: >-
+                {{ gemini_response is defined and gemini_response.data is
+                defined }}
+          then:
+            - action: tts.speak
+              target:
+                entity_id: tts.google_ai_tts
+              data:
+                media_player_entity_id: media_player.geosil
+                message: '{{ gemini_response.data }}'
+                options:
+                  voice: Leda
+                cache: false
+            - variables:
+                success: true
+            - stop: 성공
+        - delay:
+            seconds: 2
+  - if:
+      - condition: template
+        value_template: '{{ not success }}'
+    then:
+      - action: tts.speak
+        target:
+          entity_id: tts.google_ai_tts
+        data:
+          media_player_entity_id: media_player.geosil
+          message: 오늘 아침 브리핑을 가져오지 못했어. 잠시 후 다시 확인해줘!
+          options:
+            voice: Leda
+          cache: false
+mode: single

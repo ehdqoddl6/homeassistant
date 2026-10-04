@@ -1,0 +1,21 @@
+# 2026-10-04 사용자 확인: 제공한 YAML 사용 및 10분 전 알림 테스트 성공.
+# 적용 위치: UI의 단일 자동화 YAML 편집기. 기존 완료 알림과 별도로 사용한다.
+alias: 세탁기 완료 10분 전 TTS 알림
+description: "예상 완료 시각 10분 전에 음성 알림"
+triggers:
+  - trigger: time
+    at:
+      entity_id: sensor.setaggi_remaining_time
+      offset: "-00:10:00"
+conditions: []
+actions:
+  - action: tts.speak
+    target:
+      entity_id: tts.google_ai_tts
+    data:
+      cache: true
+      media_player_entity_id: media_player.geosil
+      options:
+        voice: Leda
+      message: "세탁이 약 10분 후에 완료됩니다."
+mode: single

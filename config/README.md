@@ -1,14 +1,15 @@
 # Home Assistant 설정 관리
 
 검토·버전 관리할 실제 설정과 코드를 이 경로에 추가한다.
-아직 실행 가능한 설정 파일은 없으며, 이 디렉터리가 서버의 `/config`에 연결되어 있지는 않다.
+이 디렉터리는 서버의 `/config`에 연결되어 있지 않다.
+[자동화 보관 폴더](automations/README.md)에 사용자 제공 YAML과 예제를 보관하며, 실제 적용·검증 여부는 각 폴더의 README에 기록한다.
 
 기존 환경을 가져올 때는 그 구조를 우선한다. 다음 경로는 필요할 때 생성한다.
 
 | 경로 예시 | 용도 |
 | --- | --- |
 | `configuration.yaml` | 주요 설정과 include 연결 |
-| `automations/` | 파일로 관리하는 자동화 |
+| `automations/<주제>/` | 자동화 YAML, 적용 안내와 작업 기록 링크 |
 | `scripts.yaml` 또는 `scripts/` | 기존 관리 방식에 맞춘 스크립트 |
 | `packages/` | 기능 단위 패키지 |
 | `custom_components/<domain>/` | 직접 관리하는 커스텀 컴포넌트 |
