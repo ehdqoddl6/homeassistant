@@ -4,6 +4,7 @@
 이 디렉터리는 서버의 `/config`에 연결되어 있지 않다.
 [자동화 보관 폴더](automations/README.md)에 사용자 제공 YAML과 예제를 보관하며, 실제 적용·검증 여부는 각 폴더의 README에 기록한다.
 [날씨 안내 스크립트](scripts/weather-briefing/README.md)는 호출 시 날씨만 생성·재생하는 별도 스크립트다.
+[원달러 환율 안내 스크립트](scripts/usd-krw-briefing/README.md)는 호출 시 환율만 짧게 생성·재생한다.
 
 기존 환경을 가져올 때는 그 구조를 우선한다. 다음 경로는 필요할 때 생성한다.
 
