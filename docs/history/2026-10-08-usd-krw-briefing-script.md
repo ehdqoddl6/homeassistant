@@ -57,3 +57,7 @@
 - [Home Assistant TTS](https://www.home-assistant.io/integrations/tts/)
 
 커스텀 TTS의 설치 버전·upstream은 미확인으로 사용자 제공 옵션을 유지했다.
+
+## 후속 작업
+
+- [2026-10-09 원달러 환율 시황 브리핑 문체 변경](2026-10-09-usd-krw-market-briefing.md). 고정 예문을 없애고 방송체 존댓말로 변경했다.

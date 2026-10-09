@@ -1,0 +1,73 @@
+alias: 원달러 환율 알려줘
+description: 원달러 환율 센서로 Gemini가 짧은 안내 원고를 생성하고 거실 스피커로 재생 (생성 최대 3회 시도)
+sequence:
+  - variables:
+      exchange_rate: "{{ states('sensor.yahoofinance_krw_x') }}"
+  - repeat:
+      count: 3
+      sequence:
+        - variables:
+            ai_response: {}
+        - action: ai_task.generate_data
+          data:
+            task_name: 원달러 환율 알려줘
+            entity_id: ai_task.google_ai_task
+            instructions: >-
+              아래 원달러 환율을 스피커로 바로 읽을 짧은 한국어 안내 원고로 작성해줘.
+              오빠에게 이야기하듯 다정하고 자연스러운 반말로만 말해줘. 존댓말은 쓰지 마.
+
+              [조회된 환율]
+              미국 달러 1달러당 대한민국 원화: {{ exchange_rate }} 원
+
+              '오빠, 조회된 원달러 환율은 1달러에 [환율]원이야.'처럼 한 문장으로 알려줘.
+              대괄호와 '환율' 자리표시자는 그대로 읽지 말고 제공된 실제 값으로 바꿔줘.
+              숫자는 소수점 둘째 자리까지 반올림해서 말하고 불필요한 끝자리 0은 생략해줘.
+              통화 기호나 USD, KRW 같은 코드는 읽지 말고 '달러', '원'으로 말해줘.
+              제목, 목록, 콜론, 마크다운, 이모지, 괄호 설명 없이 읽을 원고만 출력해줘.
+
+              이 값은 센서에 저장된 시세이고 시세 기준 시각은 제공되지 않았어.
+              실시간 환율, 방금 갱신된 환율, 오늘 마감 환율이라고 단정하지 마.
+              은행의 현찰 매매·송금·수수료 적용 환율이라고 설명하지 마.
+              전일 대비 등락, 상승·하락 원인, 전망, 환전 추천, 다른 통화나 주식 이야기는 덧붙이지 마.
+
+              값이 unknown, unavailable, None, N/A, 빈 값이거나 유효한 양수가 아니면
+              '오빠, 지금은 원달러 환율을 확인하기 어려워. 잠시 후 다시 물어봐줘.'라고만 말해줘.
+              확인할 수 없는 값을 추측하거나 0원으로 바꾸지 마.
+              이 누락 처리 규칙은 위의 말투 예시와 숫자 읽기 규칙보다 우선해.
+          response_variable: ai_response
+          continue_on_error: true
+        - if:
+            - condition: template
+              value_template: >-
+                {{ ai_response is defined
+                   and ai_response is mapping
+                   and ai_response.data is defined
+                   and ai_response.data is string
+                   and ai_response.data | trim | length > 0 }}
+          then:
+            - action: tts.speak
+              target:
+                entity_id: tts.google_ai_tts
+              data:
+                media_player_entity_id: media_player.geosil
+                message: '{{ ai_response.data | trim }}'
+                options:
+                  voice: Leda
+                cache: false
+            - stop: 원달러 환율 안내 TTS 요청 완료
+        - if:
+            - condition: template
+              value_template: '{{ repeat.index < 3 }}'
+          then:
+            - delay:
+                seconds: 2
+  - action: tts.speak
+    target:
+      entity_id: tts.google_ai_tts
+    data:
+      media_player_entity_id: media_player.geosil
+      message: 오빠, 지금은 원달러 환율 안내를 만들지 못했어. 잠시 후 다시 물어봐줘.
+      options:
+        voice: Leda
+      cache: false
+mode: single
