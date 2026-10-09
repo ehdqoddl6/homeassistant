@@ -79,3 +79,7 @@ API 응답에는 시간대가 포함된 `arrivalTimeZ`도 있었으며 현재 �
 - [Core 2026.9.3 Command Line 센서](https://github.com/home-assistant/core/blob/2026.9.3/homeassistant/components/command_line/sensor.py)
 
 네이버 API 구조는 사용자 제공 URL의 직접 응답에서 확인했다. 공식 공개 API 계약이나 장기 호환성을 확인한 것은 아니다.
+
+## 후속 작업
+
+- [2026-10-10 지하철 안내 말투 개선과 도착 예정 시각 계산](2026-10-10-subway-arrival-time.md): 해요체 안내로 조정하고 현재 시각에 남은 시간을 더한 평내호평역 도착 예정 시각을 함께 전달한다.
