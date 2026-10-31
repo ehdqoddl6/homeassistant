@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | [sunday-briefing/](sunday-briefing/README.md) | 일요일 날씨·일정·환율 브리핑 | 일정 조회·instructions 수정, 운영 미적용 |
 | [morning-briefing/](morning-briefing/README.md) | 날씨·일정·시장 아침 브리핑 | instructions 수정, 운영 미적용 |
-| [lg-washer-tts/](lg-washer-tts/README.md) | LG 세탁기 완료·완료 10분 전 TTS 알림 | 제공한 설정 사용·사전 알림 테스트 성공 (사용자 확인) |
+| [lg-washer-tts/](lg-washer-tts/README.md) | LG 세탁기 완료 30분·20분·10분 전·완료 TTS 알림 통합 | 기존 10분 전 사용자 테스트 성공 / 통합본 로컬 수정·운영 미적용 |
 
 ## 보관 규칙
 

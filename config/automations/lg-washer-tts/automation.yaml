@@ -1,0 +1,35 @@
+# 2026-10-04 사용자 확인: 기존 10분 전 알림 테스트 성공.
+# 적용 위치: UI의 기존 10분 전 자동화 YAML 편집기. 기존 완료 자동화는 비활성화한다.
+alias: 세탁기 완료 전·완료 TTS 알림
+description: "예상 완료 30분·20분·10분 전과 완료 알림을 음성으로 안내"
+triggers:
+  - trigger: time
+    id: "30"
+    at:
+      entity_id: sensor.setaggi_remaining_time
+      offset: "-00:30:00"
+  - trigger: time
+    id: "20"
+    at:
+      entity_id: sensor.setaggi_remaining_time
+      offset: "-00:20:00"
+  - trigger: time
+    id: "10"
+    at:
+      entity_id: sensor.setaggi_remaining_time
+      offset: "-00:10:00"
+  - trigger: state
+    id: complete
+    entity_id: event.setaggi_notification
+conditions: []
+actions:
+  - action: tts.speak
+    target:
+      entity_id: tts.google_ai_tts
+    data:
+      cache: true
+      media_player_entity_id: media_player.geosil
+      options:
+        voice: Leda
+      message: "{{ '세탁을 종료합니다' if trigger.id == 'complete' else '세탁이 약 ' ~ trigger.id ~ '분 후에 완료됩니다.' }}"
+mode: single
