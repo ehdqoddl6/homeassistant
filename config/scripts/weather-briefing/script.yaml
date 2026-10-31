@@ -102,7 +102,7 @@ sequence:
       entity_id: tts.google_ai_tts
     data:
       media_player_entity_id: media_player.geosil
-      message: 오빠, 지금은 날씨 안내를 만들지 못했어. 잠시 후 다시 물어봐줘.
+      message: 지금은 날씨 안내를 만들지 못했습니다. 잠시 후 다시 확인해 주세요.
       options:
         voice: Leda
       cache: false

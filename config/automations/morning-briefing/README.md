@@ -22,6 +22,7 @@
 - 생성: `ai_task.google_ai_task`, 최대 3회 시도.
 - 출력: `tts.google_ai_tts` → `media_player.geosil`, 음성 `Leda`.
 - 실패 안내와 `mode: single` 등 실행 구조는 사용자 제공 설정을 유지한다.
+- 2026-11-01 현재 원고 지시와 실패 안내는 개인 호칭 없는 존댓말이다. 당시 설정·검증 설명은 아래에 보존했다.
 
 ## instructions 변경
 
@@ -49,4 +50,5 @@ YAML 문법·중복 키·구조, instructions 외 설정 보존, Jinja 표현식
 
 | 날짜 | 기록 | 상태 |
 | --- | --- | --- |
+| 2026-11-01 | [브리핑의 개인 호칭과 반말 제거](../../../docs/history/2026-11-01-briefing-tone.md) | 로컬 수정·정적 검증 완료, 운영 미적용 |
 | 2026-10-04 | [아침 브리핑 보관과 자연스러운 instructions 수정](../../../docs/history/2026-10-04-morning-briefing.md) | 로컬 수정·검증 완료, 운영 미적용 |
