@@ -1,0 +1,23 @@
+name: "mcp-toss"
+version: "0.1.0"
+slug: "mcp_toss"
+description: "Run the mcp-toss Toss Securities MCP server locally for Home Assistant"
+url: "https://www.npmjs.com/package/mcp-toss"
+arch:
+  - amd64
+  - aarch64
+startup: services
+boot: auto
+init: false
+ports:
+  8080/tcp: null
+ports_description:
+  8080/tcp: "MCP SSE endpoint (internal Home Assistant app network)"
+options:
+  toss_client_id: ""
+  toss_client_secret: ""
+  toss_account_no: ""
+schema:
+  toss_client_id: str
+  toss_client_secret: password
+  toss_account_no: str
