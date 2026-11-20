@@ -6,7 +6,9 @@
 | 폴더 | 내용 | 상태 |
 | --- | --- | --- |
 | [dehumidifier-auto-off/](dehumidifier-auto-off/README.md) | 제습기 켜짐 2시간 후 자동 끄기 | 기존 자동화 사용 중 (사용자 확인), 로컬 보관·정적 검증 완료 / 에이전트 미적용 |
-| [device-state-tts/](device-state-tts/README.md) | 제습기·선풍기·환풍기 상태 TTS 알림 통합 | 로컬 작성·정적 검증 완료, 운영 미적용 |
+| [device-state-tts/](device-state-tts/README.md) | 제습기·선풍기·환풍기 상태 TTS 알림 통합 | 운영 사용 중, 2026-11-20 환풍기 엔티티 교체 / 환기 음성 확인 완료 (사용자 확인) |
+| [air-quality-ventilation-tts/](air-quality-ventilation-tts/README.md) | 안방 초미세먼지 높을 때 환기 음성 안내 | 2026-11-20 HA UI에 새로 저장 / 실제 발화 미확인 |
+| [ventilation-auto-off/](ventilation-auto-off/README.md) | 거실 환풍기 켜짐 2시간 후 자동 끄기 | 운영 사용 중, 2026-11-20 환풍기 엔티티 교체·저장 / 2시간 동작 미확인 |
 | [sunday-briefing/](sunday-briefing/README.md) | 일요일 날씨·일정·환율 브리핑 | 일정 조회·instructions 수정, 운영 미적용 |
 | [morning-briefing/](morning-briefing/README.md) | 날씨·일정·시장 아침 브리핑 | instructions 수정, 운영 미적용 |
 | [lg-washer-tts/](lg-washer-tts/README.md) | LG 세탁기 완료 30분·20분·10분 전·완료 TTS 알림 통합 | 기존 10분 전 사용자 테스트 성공 / 통합본 로컬 수정·운영 미적용 |

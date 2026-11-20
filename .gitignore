@@ -36,3 +36,6 @@ venv/
 .ruff_cache/
 .coverage
 htmlcov/
+
+# Claude Code local settings
+.claude/settings.local.json

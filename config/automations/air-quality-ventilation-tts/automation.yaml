@@ -1,0 +1,27 @@
+alias: 공기질 나쁨 환기 음성 안내
+description: 안방 초미세먼지가 10분 넘게 35㎍/㎥를 넘으면 환풍기가 꺼져 있을 때 거실 스피커로 환기를 안내
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.zhimi_sg_361561939_mb3_pm2_5_density_p_3_6
+    above: 35
+    for:
+      minutes: 10
+conditions:
+  - condition: state
+    entity_id: fan.geosil_hoanpunggi
+    state: "off"
+  - condition: time
+    after: "08:00:00"
+    before: "22:00:00"
+actions:
+  - action: tts.speak
+    target:
+      entity_id: tts.google_ai_tts
+    data:
+      cache: false
+      media_player_entity_id: media_player.geosil
+      message: >-
+        실내 초미세먼지가 {{ states('sensor.zhimi_sg_361561939_mb3_pm2_5_density_p_3_6') | int }}마이크로그램으로 높습니다. 환기를 해 주세요.
+      options:
+        voice: Leda
+mode: single

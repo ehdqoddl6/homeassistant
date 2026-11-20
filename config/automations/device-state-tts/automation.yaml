@@ -1,5 +1,5 @@
 alias: 기기 상태 변경 TTS 알림
-description: 제습기 켜짐·꺼짐, 안방 선풍기 꺼짐, 환풍기 켜짐·꺼짐을 거실 스피커로 안내
+description: 제습기 켜짐·꺼짐, 안방 선풍기 꺼짐, 환풍기 켜짐·꺼짐, 공기청정기 켜짐·꺼짐을 거실 스피커로 안내
 triggers:
   - trigger: state
     entity_id: switch.jeseubgi
@@ -14,17 +14,27 @@ triggers:
     to: "off"
     id: bedroom_fan_off
   - trigger: state
-    entity_id: fan.kocom_ventilation_0_0
+    entity_id: fan.geosil_hoanpunggi
     to: "on"
     id: ventilation_on
   - trigger: state
-    entity_id: fan.kocom_ventilation_0_0
+    entity_id: fan.geosil_hoanpunggi
     to: "off"
     id: ventilation_off
+  - trigger: state
+    entity_id: fan.zhimi_sg_361561939_mb3_s_2_air_purifier
+    from: "off"
+    to: "on"
+    id: purifier_on
+  - trigger: state
+    entity_id: fan.zhimi_sg_361561939_mb3_s_2_air_purifier
+    from: "on"
+    to: "off"
+    id: purifier_off
 conditions: []
 actions:
   - delay:
-      seconds: "{{ 4 if trigger.id in ['dehumidifier_on', 'ventilation_on'] else 1 }}"
+      seconds: "{{ 4 if trigger.id in ['dehumidifier_on', 'ventilation_on', 'purifier_on'] else 1 }}"
   - condition: template
     value_template: "{{ is_state(trigger.entity_id, trigger.to_state.state) }}"
   - action: tts.speak
@@ -42,6 +52,10 @@ actions:
           안방 화장실 선풍기가 꺼졌습니다.
         {% elif trigger.id == 'ventilation_on' %}
           환기를 시작합니다.
+        {% elif trigger.id == 'purifier_on' %}
+          공기청정기를 켰습니다.
+        {% elif trigger.id == 'purifier_off' %}
+          공기청정기를 껐습니다.
         {% else %}
           환기를 종료합니다.
         {% endif %}

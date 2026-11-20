@@ -1,0 +1,19 @@
+alias: 환기팬 2시간 후 자동 끄기
+description: 환기팬이 켜진 후 2시간이 지나면 자동으로 끕니다.
+triggers:
+  - entity_id: fan.geosil_hoanpunggi
+    to: "on"
+    trigger: state
+actions:
+  - delay:
+      hours: 2
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - condition: state
+    entity_id: fan.geosil_hoanpunggi
+    state: "on"
+  - target:
+      entity_id: fan.geosil_hoanpunggi
+    action: fan.turn_off
+mode: restart

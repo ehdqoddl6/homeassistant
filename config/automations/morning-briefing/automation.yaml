@@ -9,6 +9,9 @@ triggers:
       - wed
       - thu
       - fri
+  - at: '07:40:00'
+    trigger: time
+    weekday:
       - sat
 conditions:
   - condition: time
