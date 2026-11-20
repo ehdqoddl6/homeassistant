@@ -39,3 +39,6 @@ htmlcov/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# oh-my-claudecode state (any depth)
+.omc/
