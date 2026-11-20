@@ -27,6 +27,8 @@
 | 기기 / 통합 | 모델 / domain | 버전 / 펌웨어 | 연결 방식 | upstream / 근거 | 확인일 |
 | --- | --- | --- | --- | --- | --- |
 | 평내호평역 상행 도착 센서 3개 | `command_line` / `sensor` | 현재 서버 버전 미확인 | 네이버 지하철 응답을 `curl`·`jq`로 조회, 5초 간격 설정 | 사용자 제공 YAML. 실제 엔티티 ID·실행 상태는 미확인. [작업 기록](history/2026-10-09-subway-briefing-script.md) | 2026-10-09 |
+| 코콤 월패드 RS485 브릿지 | Homenet2MQTT 애드온 (slug `h2m`), 브릿지 `kocom_main` | v3.4.0 | LAN의 RS485-TCP 게이트웨이(9600bps) → h2m → Mosquitto(`core-mosquitto`) MQTT 디스커버리. 설정 파일 `default.homenet_bridge.yaml` | [homenet2mqtt](https://github.com/wooooooooooook/homenet2mqtt). h2m 웹 UI에서 확인. 엔티티: 조명 `room_0_light_1·2`, 난방 `room_0~3_heater`, 엘리베이터, `livingroom_fan`. [작업 기록](history/2026-11-20-h2m-kocom-heater-light-fan.md) | 2026-11-20 |
+| 이전 코콤 연동 | HACS 커스텀 통합 (lunDreame/kocom-wallpad로 추정) | 미확인 | h2m 이전 사용. 환풍기 제어가 됐다고 사용자 제공. 현재 설치·활성 여부 미확인 | 사용자 제공 | 2026-11-20 |
 | 제습기 스위치 | `switch.jeseubgi` / `switch` | 미확인 | 제습기 켜짐 2시간 후 자동 끄기에 사용 | 사용자 제공 YAML과 기존 자동화 사용 중 확인. 실제 상태·2시간 후 꺼짐 결과는 미확인. [작업 기록](history/2026-11-01-dehumidifier-auto-off.md) | 2026-11-01 |
 
 ## 환경 변경 이력
