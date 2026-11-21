@@ -34,6 +34,7 @@ actions:
         - calendar.ice
         - calendar.jigjang
         - calendar.kaelrindeo
+        - calendar.yeni
     data:
       start_date_time: '{{ now().strftime(''%Y-%m-%d 00:00:00'') }}'
       duration:

@@ -7,7 +7,7 @@
 
 | 파일 | 용도 | 상태 |
 | --- | --- | --- |
-| [automation.yaml](automation.yaml) | 자연스러운 음성 원고를 위한 instructions 수정본 | 로컬 문법·변경 범위 검증 완료, 운영 미적용 |
+| [automation.yaml](automation.yaml) | 자연스러운 음성 원고를 위한 instructions 수정본 | 2026-11-21 HA UI에 전체 교체로 적용(사용자), 실제 음성 미확인 |
 | [history/2026-10-04-before-instructions.yaml](history/2026-10-04-before-instructions.yaml) | 수정 전 사용자 제공 설정 | 복구·비교용 보관 |
 
 두 파일은 UI의 **단일 자동화 YAML 편집기**에 넣는 형태다.
@@ -18,7 +18,8 @@
 ## 현재 설정
 
 - 실행 시각: 월요일~금요일 07:03:30, 토요일 07:40:00 (2026-11-20 변경, 일요일 브리핑과 같은 시각). Home Assistant 시간대 기준이며 서버 시간대는 미확인이다.
-- 입력: 사용자 제공 날씨 센서, 캘린더 5개, Yahoo Finance 센서.
+- 입력: 사용자 제공 날씨 센서, 캘린더 6개, Yahoo Finance 센서.
+- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤).
 - 생성: `ai_task.google_ai_task`, 최대 3회 시도.
 - 출력: `tts.google_ai_tts` → `media_player.geosil`, 음성 `Leda`.
 - 실패 안내와 `mode: single` 등 실행 구조는 사용자 제공 설정을 유지한다.
@@ -50,6 +51,7 @@ YAML 문법·중복 키·구조, instructions 외 설정 보존, Jinja 표현식
 
 | 날짜 | 기록 | 상태 |
 | --- | --- | --- |
+| 2026-11-21 | [새 캘린더 `calendar.yeni` 추가](../../../docs/history/2026-11-21-briefing-calendar-yeni.md) | HA UI에 전체 YAML 교체로 적용(사용자), 실제 낭독 미확인 |
 | 2026-11-20 | [토요일 실행 시각을 07:40으로 분리](../../../docs/history/2026-11-20-h2m-kocom-heater-light-fan.md) | HA UI에 적용(트리거만 변경), 실제 토요일 실행 미확인 |
 | 2026-11-01 | [브리핑의 개인 호칭과 반말 제거](../../../docs/history/2026-11-01-briefing-tone.md) | 로컬 수정·정적 검증 완료, 운영 미적용 |
 | 2026-10-04 | [아침 브리핑 보관과 자연스러운 instructions 수정](../../../docs/history/2026-10-04-morning-briefing.md) | 로컬 수정·검증 완료, 운영 미적용 |

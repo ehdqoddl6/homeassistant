@@ -27,6 +27,7 @@ actions:
         - calendar.ice
         - calendar.jigjang
         - calendar.kaelrindeo
+        - calendar.yeni
     data:
       start_date_time: '{{ now().strftime(''%Y-%m-%d 00:00:00'') }}'
       duration:
@@ -36,7 +37,7 @@ actions:
   - variables:
       schedule_text: >-
         {%- set ns = namespace(lines=[], failed=false) -%}
-        {%- set expected = ['calendar.gajog', 'calendar.gajog_2', 'calendar.ice', 'calendar.jigjang', 'calendar.kaelrindeo'] -%}
+        {%- set expected = ['calendar.gajog', 'calendar.gajog_2', 'calendar.ice', 'calendar.jigjang', 'calendar.kaelrindeo', 'calendar.yeni'] -%}
         {%- set responses = calendar_events if calendar_events is defined and calendar_events is mapping else {} -%}
         {%- for entity_id in expected -%}
           {%- set cal = responses.get(entity_id, {}) -%}

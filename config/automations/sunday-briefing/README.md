@@ -7,7 +7,7 @@
 
 | 파일 | 용도 | 상태 |
 | --- | --- | --- |
-| [automation.yaml](automation.yaml) | 일정 조회와 자연스러운 말투를 반영한 수정본 | 로컬 구조·변경 범위 검증 완료, 운영 미적용 |
+| [automation.yaml](automation.yaml) | 일정 조회와 자연스러운 말투를 반영한 수정본 | 2026-11-21 HA UI에 전체 교체로 적용(사용자), 실제 음성 미확인 |
 | [history/2026-10-04-before-instructions.yaml](history/2026-10-04-before-instructions.yaml) | 사용자 제공 수정 전 설정 | 복구·비교용 보관 |
 | [history/2026-10-04-before-calendar.yaml](history/2026-10-04-before-calendar.yaml) | 구어체 수정 후, 일정 조회 추가 전 설정 | 일정 추가만 되돌릴 때 사용 |
 
@@ -18,8 +18,8 @@ UI의 기존 **일요일 브리핑 자동화 → YAML 편집기**에 수정본�
 ## 설정과 변경
 
 - 실행: 일요일 07:40:00, Home Assistant에 설정된 시간대 기준. 서버 시간대·설치 버전은 미확인이다.
-- 입력: 사용자 제공 날씨 센서, 캘린더 5개, 원달러 환율 센서.
-- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`.
+- 입력: 사용자 제공 날씨 센서, 캘린더 6개, 원달러 환율 센서.
+- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤). 조회 대상과 `schedule_text`의 `expected` 목록을 함께 맞춰야 한다.
 - 일정 조회: 평일 브리핑과 동일하게 `calendar.get_events`로 오늘 자정부터 24시간을 조회하고, 제목·시작 시각·장소를 `schedule_text`에 담는다.
 - 생성: `ai_task.google_ai_task`, 최대 3회 시도.
 - 출력: `tts.google_ai_tts` → `media_player.geosil`, 음성 `Leda`.
@@ -41,5 +41,6 @@ AI 응답 검사와 TTS 실패 처리는 원문을 유지했다.
 
 | 날짜 | 기록 | 상태 |
 | --- | --- | --- |
+| 2026-11-21 | [새 캘린더 `calendar.yeni` 추가](../../../docs/history/2026-11-21-briefing-calendar-yeni.md) | HA UI에 전체 YAML 교체로 적용(사용자), 실제 낭독 미확인 |
 | 2026-11-01 | [브리핑의 개인 호칭과 반말 제거](../../../docs/history/2026-11-01-briefing-tone.md) | 로컬 수정·정적 검증 완료, 운영 미적용 |
 | 2026-10-04 | [일요일 브리핑 구어체 수정과 오늘 일정 조회 추가](../../../docs/history/2026-10-04-sunday-briefing.md) | 로컬 수정·정적 검증 완료, 운영 미적용 |

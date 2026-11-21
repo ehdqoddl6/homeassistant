@@ -74,3 +74,7 @@ README에도 이 변경을 기록했다. 이번 수정은 로컬에만 반영했
 - [Home Assistant AI Task](https://www.home-assistant.io/integrations/ai_task/): AI 생성 액션과 텍스트 응답 예제.
 - [Home Assistant 템플릿](https://www.home-assistant.io/docs/templating/): 템플릿 사용 안내.
 - [Jinja 템플릿 문서](https://jinja.palletsprojects.com/en/stable/templates/): 템플릿·필터 참고.
+
+## 후속 (2026-11-21)
+
+이 기록의 아침 브리핑 수정본은 [2026-11-21 새 캘린더 추가 작업](2026-11-21-briefing-calendar-yeni.md)에서 사용자가 HA UI YAML 편집기로 전체 교체해 운영에 적용했다. 실제 원고·음성 확인은 아직 하지 않았다.

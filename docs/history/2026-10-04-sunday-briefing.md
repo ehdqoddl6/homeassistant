@@ -81,3 +81,7 @@
 - [앞서 수정한 평일 브리핑 설정](../../config/automations/morning-briefing/automation.yaml)의 말투·출력 형식 규칙.
 - [Home Assistant calendar.get_events 공식 문서](https://www.home-assistant.io/actions/calendar.get_events/): 복수 캘린더 대상, 조회 범위, 응답의 events 구조. 2026-10-04 확인.
 - [스크립트 실행 오류 처리](https://www.home-assistant.io/docs/scripts/#continuing-when-a-step-fails): `continue_on_error`. 2026-10-04 확인.
+
+## 후속 (2026-11-21)
+
+이 기록의 일요일 브리핑 수정본은 [2026-11-21 새 캘린더 추가 작업](2026-11-21-briefing-calendar-yeni.md)에서 사용자가 HA UI YAML 편집기로 전체 교체해 운영에 적용했다. 실제 원고·음성 확인은 아직 하지 않았다.
