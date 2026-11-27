@@ -51,7 +51,8 @@ actions:
               {%- set summary = event.summary | default('제목 없음', true) -%}
               {%- set start = event.start | default('', true) -%}
               {%- set location = event.location | default('', true) -%}
-              {%- set line = '- ' ~ summary -%}
+              {%- set is_date = entity_id == 'calendar.yeni' and (summary | string | lower | replace(' ', '')) == 'newdate()' -%}
+              {%- set line = '- [데이트] 여자친구와 데이트' if is_date else '- ' ~ summary -%}
               {%- if start %}{% set line = line ~ ' (' ~ start ~ ')' %}{% endif -%}
               {%- if location %}{% set line = line ~ ' @ ' ~ location %}{% endif -%}
               {%- set ns.lines = ns.lines + [line] -%}
@@ -210,6 +211,11 @@ actions:
               이어서 오늘 일정이 있으면 시작 시각과 할 일을 짧게 연결해서 알려줘.
               '오전 [시각]에는 [일정]이 있고, 오후에는 [일정]이 예정돼 있어요'처럼 말해줘.
               종일 일정에는 임의로 시간을 붙이지 말고, 날짜·시간 원문이나 기계적인 표기는 읽지 마.
+              [데이트] 표시가 붙은 일정은 여자친구와의 데이트야. 표시 자체는 읽지 말고
+              '[시각]에는 [장소]에서 여자친구와 데이트가 있어요'처럼 데이트라는 것과 장소를 함께 알려줘.
+              장소는 그 일정 줄의 @ 뒤에 적힌 값이야. 주소가 길면 가게·건물·동네 이름 위주로 짧게 줄여주고,
+              우편번호나 국가명은 읽지 마. 장소가 없으면 지어내지 말고 '[시각]에는 여자친구와 데이트가 있어요'라고만 말해줘.
+              놀리거나 과하게 꾸미는 말은 하지 마.
               등록된 일정이 없으면 일정 부분을 생략하고 자연스럽게 다음 이야기로 넘어가줘.
 
               시장 이야기로 넘어갈 때는 '이어서 시장 소식을 전해드릴게요'처럼 짧게 연결해줘.

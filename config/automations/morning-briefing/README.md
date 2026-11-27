@@ -7,7 +7,7 @@
 
 | 파일 | 용도 | 상태 |
 | --- | --- | --- |
-| [automation.yaml](automation.yaml) | 자연스러운 음성 원고를 위한 instructions 수정본 | 2026-11-21 HA UI에 전체 교체로 적용(사용자), 실제 음성 미확인 |
+| [automation.yaml](automation.yaml) | 자연스러운 음성 원고를 위한 instructions 수정본 | 2026-11-21 HA UI에 전체 교체로 적용(사용자), 실제 음성 미확인. 데이트 소개 규칙(2026-11-27)은 로컬만 수정, HA 미적용 |
 | [history/2026-10-04-before-instructions.yaml](history/2026-10-04-before-instructions.yaml) | 수정 전 사용자 제공 설정 | 복구·비교용 보관 |
 
 두 파일은 UI의 **단일 자동화 YAML 편집기**에 넣는 형태다.
@@ -19,7 +19,7 @@
 
 - 실행 시각: 월요일~금요일 07:03:30, 토요일 07:40:00 (2026-11-20 변경, 일요일 브리핑과 같은 시각). Home Assistant 시간대 기준이며 서버 시간대는 미확인이다.
 - 입력: 사용자 제공 날씨 센서, 캘린더 6개, Yahoo Finance 센서.
-- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤).
+- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤, 여자친구와의 데이트 일정). `calendar.yeni` 일정 중 제목이 `new Date()`인 것만 데이트로 본다(2026-11-27, 대소문자·공백 무시). `schedule_text`에서 이 일정 제목을 `[데이트] 여자친구와 데이트`로 바꾸고, instructions는 데이트라는 것과 장소(`@` 뒤 값)를 함께 말하게 한다. 다른 `calendar.yeni` 일정은 일반 일정처럼 읽는다.
 - 생성: `ai_task.google_ai_task`, 최대 3회 시도.
 - 출력: `tts.google_ai_tts` → `media_player.geosil`, 음성 `Leda`.
 - 실패 안내와 `mode: single` 등 실행 구조는 사용자 제공 설정을 유지한다.

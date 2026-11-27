@@ -7,7 +7,7 @@
 
 | 파일 | 용도 | 상태 |
 | --- | --- | --- |
-| [automation.yaml](automation.yaml) | 일정 조회와 자연스러운 말투를 반영한 수정본 | 2026-11-21 HA UI에 전체 교체로 적용(사용자), 실제 음성 미확인 |
+| [automation.yaml](automation.yaml) | 일정 조회와 자연스러운 말투를 반영한 수정본 | 2026-11-21 HA UI에 전체 교체로 적용(사용자), 실제 음성 미확인. 데이트 소개 규칙(2026-11-27)은 로컬만 수정, HA 미적용 |
 | [history/2026-10-04-before-instructions.yaml](history/2026-10-04-before-instructions.yaml) | 사용자 제공 수정 전 설정 | 복구·비교용 보관 |
 | [history/2026-10-04-before-calendar.yaml](history/2026-10-04-before-calendar.yaml) | 구어체 수정 후, 일정 조회 추가 전 설정 | 일정 추가만 되돌릴 때 사용 |
 
@@ -19,7 +19,7 @@ UI의 기존 **일요일 브리핑 자동화 → YAML 편집기**에 수정본�
 
 - 실행: 일요일 07:40:00, Home Assistant에 설정된 시간대 기준. 서버 시간대·설치 버전은 미확인이다.
 - 입력: 사용자 제공 날씨 센서, 캘린더 6개, 원달러 환율 센서.
-- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤). 조회 대상과 `schedule_text`의 `expected` 목록을 함께 맞춰야 한다.
+- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤, 여자친구와의 데이트 일정). `calendar.yeni` 일정 중 제목이 `new Date()`인 것만 데이트로 본다(2026-11-27, 대소문자·공백 무시). `schedule_text`에서 이 일정 제목을 `[데이트] 여자친구와 데이트`로 바꾸고, instructions는 데이트라는 것과 장소(`@` 뒤 값)를 함께 말하게 한다. 다른 `calendar.yeni` 일정은 일반 일정처럼 읽는다. 조회 대상과 `schedule_text`의 `expected` 목록을 함께 맞춰야 한다.
 - 일정 조회: 평일 브리핑과 동일하게 `calendar.get_events`로 오늘 자정부터 24시간을 조회하고, 제목·시작 시각·장소를 `schedule_text`에 담는다.
 - 생성: `ai_task.google_ai_task`, 최대 3회 시도.
 - 출력: `tts.google_ai_tts` → `media_player.geosil`, 음성 `Leda`.
