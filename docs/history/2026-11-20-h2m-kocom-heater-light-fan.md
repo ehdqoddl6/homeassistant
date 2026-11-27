@@ -78,7 +78,7 @@ h2m 환풍기의 HA 엔티티 ID `fan.geosil_hoanpunggi`(HA 엔티티 목록에�
 | 내려받은 h2m 백업 사본 | Chrome 다운로드 폴더에서 이미 사라짐 |
 | 공기질 환기 음성 안내 | 새로 추가. 안방 Mi Air 3H 초미세먼지가 35㎍/㎥를 10분 넘게 넘고, 환풍기가 꺼져 있고, 08~22시일 때 거실 스피커로 안내한다(사용자 선택: 자동 켜기 없이 음성만). [air-quality-ventilation-tts](../../config/automations/air-quality-ventilation-tts/README.md). 실제 발화 미확인 |
 | 평일 아침 브리핑 토요일 시각 | 트리거를 월~금 07:03:30, 토 07:40:00 두 개로 분리해 HA UI에 저장. HA 실제 YAML을 복사해 트리거만 바꿨고 나머지는 그대로 유지. [morning-briefing](../../config/automations/morning-briefing/README.md). 실제 토요일 실행 미확인 |
-| 평일 오전 엘리베이터 호출 시각 | 사용자가 HA UI에서 직접 07:10:30으로 변경(사용자 확인). 저장소에는 이 자동화 YAML이 없다 |
+| 평일 오전 엘리베이터 호출 시각 | 사용자가 HA UI에서 직접 07:10:30으로 변경(사용자 확인). 저장소에는 이 자동화 YAML이 없다. 2026-11-27 호출 시 울리는 [엘리베이터 호출 TTS](2026-11-27-elevator-call-tts.md)의 button 트리거를 고쳤다 |
 | 공기청정기 켜짐·꺼짐 음성 안내 | `기기 상태 변경 TTS 알림`에 `fan.zhimi_sg_361561939_mb3_s_2_air_purifier`의 off→on, on→off 트리거 2개와 안내 문장을 추가해 HA UI에 저장. 시각 편집기에서 Air Purifier로 표시 확인. 실제 음성 미확인 |
 | 난방 자동화(야간 온도·외출 연동) | 사용자 선택으로 만들지 않음 |
 | 난방 정기 조회 자동화 | 보류. 조회 패킷 형식이 추정이라 패킷 전송기로 시험해야 하는데, 효과(브릿지 재시작 직후 값 복원)에 비해 위험이 있어 진행하지 않았다 |

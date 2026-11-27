@@ -1,0 +1,25 @@
+alias: 엘리베이터 호출 TTS
+description: ''
+triggers:
+  - trigger: state
+    entity_id:
+      - button.elevator_call
+    to:
+      - 'on'
+conditions: []
+actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 4
+      milliseconds: 0
+  - action: tts.speak
+    target:
+      entity_id: tts.google_ai_tts
+    data:
+      cache: true
+      media_player_entity_id: media_player.geosil
+      message: 엘리베이터 호출했어
+      options:
+        voice: Leda
+mode: single
