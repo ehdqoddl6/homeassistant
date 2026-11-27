@@ -1,35 +1,36 @@
-# 일요일 브리핑
+# 일요일 브리핑 (2026-11-27 통합 대상)
 
-일요일 아침에 날씨·오늘 일정·원달러 환율을 거실 스피커로 안내하는 자동화다.
-자연스러운 구어체 instructions를 작성하고, 후속 요청에 따라 평일 브리핑과 같은 캘린더의 일정 조회를 추가했다.
+일요일 아침에 날씨·오늘 일정·원달러 환율을 거실 스피커로 안내하던 자동화다.
+2026-11-27 [아침 브리핑](../morning-briefing/README.md) 하나로 통합했다. 일요일 내용(날씨·일정·환율 한 문장·주말 인사)은 통합본이 일요일 07:45에 그대로 안내한다.
+이 폴더는 이력 보관용이다. 현재 설정 파일은 [morning-briefing/automation.yaml](../morning-briefing/automation.yaml)이다.
 
 ## 파일과 적용
 
 | 파일 | 용도 | 상태 |
 | --- | --- | --- |
-| [automation.yaml](automation.yaml) | 일정 조회와 자연스러운 말투를 반영한 수정본 | 2026-11-21 HA UI에 전체 교체로 적용(사용자), 실제 음성 미확인. 데이트 소개 규칙(2026-11-27)은 로컬만 수정, HA 미적용 |
-| [history/2026-10-04-before-instructions.yaml](history/2026-10-04-before-instructions.yaml) | 사용자 제공 수정 전 설정 | 복구·비교용 보관 |
-| [history/2026-10-04-before-calendar.yaml](history/2026-10-04-before-calendar.yaml) | 구어체 수정 후, 일정 조회 추가 전 설정 | 일정 추가만 되돌릴 때 사용 |
+| [history/2026-11-27-before-merge.yaml](history/2026-11-27-before-merge.yaml) | 통합 전 마지막 설정. 2026-11-21 HA UI에 전체 교체로 넣은 내용 | 통합을 되돌릴 때 사용 |
+| [history/2026-10-04-before-calendar.yaml](history/2026-10-04-before-calendar.yaml) | 구어체 수정 후, 일정 조회 추가 전 설정 | 복구·비교용 보관 |
+| [history/2026-10-04-before-instructions.yaml](history/2026-10-04-before-instructions.yaml) | 사용자 제공 최초 설정 | 복구·비교용 보관 |
 
-UI의 기존 **일요일 브리핑 자동화 → YAML 편집기**에 수정본을 넣는다.
-새 자동화를 중복 생성하지 않는다. 일정 조회 추가만 되돌릴 때는 `before-calendar.yaml`, 최초 사용자 설정으로 되돌릴 때는 `before-instructions.yaml`로 끝나는 파일을 사용한다.
+통합본을 HA에 적용하면 기존 **일요일 브리핑** 자동화는 비활성화하거나 삭제한다. 켜 두면 일요일에 두 번 안내한다.
+통합을 되돌릴 때는 일요일 브리핑 자동화를 다시 켜거나 `2026-11-27-before-merge.yaml`로 새로 만들고, 아침 브리핑은 [morning-briefing/history/2026-11-27-before-merge.yaml](../morning-briefing/history/2026-11-27-before-merge.yaml)로 되돌린다.
 이 폴더를 읽는 상위 include는 없으며 서버 설정과 연결되어 있지 않다.
 
-## 설정과 변경
+## 통합 전 설정 (2026-11-21 HA 적용 기준)
 
 - 실행: 일요일 07:40:00, Home Assistant에 설정된 시간대 기준. 서버 시간대·설치 버전은 미확인이다.
 - 입력: 사용자 제공 날씨 센서, 캘린더 6개, 원달러 환율 센서.
-- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤, 여자친구와의 데이트 일정). `calendar.yeni` 일정 중 제목이 `new Date()`인 것만 데이트로 본다(2026-11-27, 대소문자·공백 무시). `schedule_text`에서 이 일정 제목을 `[데이트] 여자친구와 데이트`로 바꾸고, instructions는 데이트라는 것과 장소(`@` 뒤 값)를 함께 말하게 한다. 다른 `calendar.yeni` 일정은 일반 일정처럼 읽는다. 조회 대상과 `schedule_text`의 `expected` 목록을 함께 맞춰야 한다.
-- 일정 조회: 평일 브리핑과 동일하게 `calendar.get_events`로 오늘 자정부터 24시간을 조회하고, 제목·시작 시각·장소를 `schedule_text`에 담는다.
+- 캘린더: `calendar.gajog`, `calendar.gajog_2`, `calendar.ice`, `calendar.jigjang`, `calendar.kaelrindeo`, `calendar.yeni`(2026-11-21 추가, 이름 ❤❤❤). 2026-11-27 `new Date()` 데이트 규칙은 이 파일에 넣었다가 통합본으로 옮겼고, 일요일 단독 설정으로는 HA에 적용되지 않았다.
+- 일정 조회: `calendar.get_events`로 오늘 자정부터 24시간을 조회하고, 제목·시작 시각·장소를 `schedule_text`에 담는다. 이 `expected` 목록 방식은 통합본이 그대로 이어받았다.
 - 생성: `ai_task.google_ai_task`, 최대 3회 시도.
 - 출력: `tts.google_ai_tts` → `media_player.geosil`, 음성 `Leda`.
 - 2026-11-01 현재 원고 지시와 실패 안내는 개인 호칭 없는 존댓말이다. 아래 변경·검증 내용은 작성 당시 기록이다.
 - 브리핑 순서: 짧은 인사 → 날씨와 생활 팁 → 오늘 일정 → 환율 한 문장 → 휴일 인사.
 - “기온: …도” 같은 표현 대신 “지금 기온은 …도이고”처럼 말하고, 제목·목록·콜론을 출력하지 않도록 했다.
-- 정상 조회 후 일정이 없을 때만 “오늘은 등록된 일정이 없어”라고 안내한다. 전체 조회 실패와 일부 캘린더 응답 누락은 별도로 안내하며, 부분 응답에서도 확인된 일정은 전달한다.
+- 정상 조회 후 일정이 없을 때만 “오늘은 등록된 일정이 없어”라고 안내한다. 전체 조회 실패와 일부 캘린더 응답 누락은 별도로 안내하며, 부분 응답에서도 확인된 일정은 전달한다. 통합본에서는 평일 방식대로 일정이 없으면 일정 부분을 생략한다.
 - 미확인 수치·환율 등락·시간대별 날씨는 추측하지 않고 출근·업무 이야기는 하지 않도록 했다.
 
-## 검증과 미확인
+## 검증과 미확인 (작성 당시 기록)
 
 YAML 3개의 문법·중복 키·구조, 평일과 동일한 캘린더 조회 액션, 기존 입력 표현식 18개와 트리거·재시도·TTS 설정 보존을 확인했다.
 응답 있음·없음·전체 실패·부분 응답 분기는 정적으로 검토했다. Jinja 렌더링과 실제 캘린더 응답 검증은 미실행이다.
@@ -41,6 +42,7 @@ AI 응답 검사와 TTS 실패 처리는 원문을 유지했다.
 
 | 날짜 | 기록 | 상태 |
 | --- | --- | --- |
+| 2026-11-27 | [평일·일요일 브리핑 통합과 주말 07:45 실행](../../../docs/history/2026-11-27-briefing-merge.md) | 아침 브리핑으로 통합, HA 미적용 |
 | 2026-11-21 | [새 캘린더 `calendar.yeni` 추가](../../../docs/history/2026-11-21-briefing-calendar-yeni.md) | HA UI에 전체 YAML 교체로 적용(사용자), 실제 낭독 미확인 |
 | 2026-11-01 | [브리핑의 개인 호칭과 반말 제거](../../../docs/history/2026-11-01-briefing-tone.md) | 로컬 수정·정적 검증 완료, 운영 미적용 |
 | 2026-10-04 | [일요일 브리핑 구어체 수정과 오늘 일정 조회 추가](../../../docs/history/2026-10-04-sunday-briefing.md) | 로컬 수정·정적 검증 완료, 운영 미적용 |

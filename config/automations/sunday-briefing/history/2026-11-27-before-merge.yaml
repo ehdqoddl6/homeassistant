@@ -47,8 +47,7 @@ actions:
                 {%- set summary = event.summary | default('제목 없음', true) -%}
                 {%- set start = event.start | default('', true) -%}
                 {%- set location = event.location | default('', true) -%}
-                {%- set is_date = entity_id == 'calendar.yeni' and (summary | string | lower | replace(' ', '')) == 'newdate()' -%}
-                {%- set line = '- [데이트] 여자친구와 데이트' if is_date else '- ' ~ summary -%}
+                {%- set line = '- ' ~ summary -%}
                 {%- if start %}{% set line = line ~ ' (' ~ start ~ ')' %}{% endif -%}
                 {%- if location %}{% set line = line ~ ' @ ' ~ location %}{% endif -%}
                 {%- set ns.lines = ns.lines + [line] -%}
@@ -142,11 +141,6 @@ actions:
               '오전 [시각]에는 [일정]이 있고, 오후에는 [일정]이 예정돼 있어요'처럼 시작 시각과 할 일을 연결해줘.
               종일 일정에는 임의로 시간을 붙이지 말고, 장소는 필요할 때만 짧게 덧붙여줘.
               날짜·시간 원문이나 목록 기호를 그대로 읽지 말고, 같은 일정은 중복해서 말하지 마.
-              [데이트] 표시가 붙은 일정은 여자친구와의 데이트야. 표시 자체는 읽지 말고
-              '[시각]에는 [장소]에서 여자친구와 데이트가 있어요'처럼 데이트라는 것과 장소를 함께 알려줘.
-              장소는 그 일정 줄의 @ 뒤에 적힌 값이야. 주소가 길면 가게·건물·동네 이름 위주로 짧게 줄여주고,
-              우편번호나 국가명은 읽지 마. 장소가 없으면 지어내지 말고 '[시각]에는 여자친구와 데이트가 있어요'라고만 말해줘.
-              놀리거나 과하게 꾸미는 말은 하지 마.
               [오늘 일정]이 '등록된 일정 없음'이면 '오늘은 등록된 일정이 없어요'라고 한 문장으로 알려줘.
               조회 실패로 표시되면 '오늘 일정은 지금 확인이 어려워요'라고 짧게 말하고 일정이 없다고 단정하지 마.
               일부 캘린더만 조회됐다면 확인된 일정은 알려주고, 일부 일정은 확인하지 못했다고 한마디 덧붙여줘.

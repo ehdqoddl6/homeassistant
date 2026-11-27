@@ -18,7 +18,7 @@
 | 파일 | 변경 |
 | --- | --- |
 | [morning-briefing/automation.yaml](../../config/automations/morning-briefing/automation.yaml) | `calendar.get_events` `target.entity_id`에 `calendar.yeni` 추가 |
-| [sunday-briefing/automation.yaml](../../config/automations/sunday-briefing/automation.yaml) | `target.entity_id`와 `schedule_text`의 `expected` 목록 양쪽에 `calendar.yeni` 추가 |
+| [sunday-briefing/automation.yaml](../../config/automations/sunday-briefing/history/2026-11-27-before-merge.yaml) (2026-11-27 통합으로 이력 파일로 이동) | `target.entity_id`와 `schedule_text`의 `expected` 목록 양쪽에 `calendar.yeni` 추가 |
 
 일요일 브리핑은 `expected` 목록에 있는 캘린더만 응답에서 꺼내 읽고, 목록에 있는데 응답이 없으면 "일부 캘린더의 일정 정보를 가져오지 못했습니다"를 붙인다. 그래서 조회 대상과 `expected`를 함께 바꿨다.
 평일 브리핑은 응답에 들어온 캘린더를 모두 순회하므로 조회 대상만 추가하면 된다.
@@ -77,6 +77,7 @@ instructions, 트리거 등 나머지 설정은 바꾸지 않았다.
 - Home Assistant 구성 검사, 실제 AI 원고·음성 확인은 미실행.
 
 운영 반영: 미적용. 적용하려면 HA UI의 **평일 아침 브리핑**, **일요일 브리핑** YAML 편집기에서 `schedule_text`의 `set line` 줄과 instructions 일정 부분을 이 파일 내용으로 바꾼다. 2026-11-21 전체 교체 이후 HA에서 따로 바꾼 부분이 있으면 전체 교체 대신 해당 줄만 바꾼다.
+같은 날 이 규칙을 포함해 두 브리핑을 하나로 합쳤다. 적용은 [2026-11-27 통합 기록](2026-11-27-briefing-merge.md)의 순서를 따른다.
 복구: `is_date` 줄을 지우고 `set line`을 `'- ' ~ summary`로 되돌린 뒤 instructions의 `[데이트]` 문단 다섯 줄을 지운다.
 
 ## 미해결과 다음 작업

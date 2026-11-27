@@ -11,7 +11,7 @@
 
 ## 변경과 선택 이유
 
-- [아침 브리핑](../../config/automations/morning-briefing/automation.yaml)과 [일요일 브리핑](../../config/automations/sunday-briefing/automation.yaml): AI 지시를 개인 호칭 없는 자연스러운 존댓말로 바꾸고, 반말 예시·일정 조회 실패 문구·고정 TTS 실패 문구를 같은 문체로 맞췄다. 센서, 일정, 트리거, 재시도, TTS 대상은 유지했다.
+- [아침 브리핑](../../config/automations/morning-briefing/automation.yaml)과 [일요일 브리핑](../../config/automations/sunday-briefing/history/2026-11-27-before-merge.yaml): AI 지시를 개인 호칭 없는 자연스러운 존댓말로 바꾸고, 반말 예시·일정 조회 실패 문구·고정 TTS 실패 문구를 같은 문체로 맞췄다. 센서, 일정, 트리거, 재시도, TTS 대상은 유지했다.
 - [날씨](../../config/scripts/weather-briefing/script.yaml)와 [환율](../../config/scripts/usd-krw-briefing/script.yaml) 스크립트: AI 생성 실패 시 고정 TTS 안내에서 호칭과 반말을 제거했다. 기존 AI 프롬프트는 이미 존댓말이었다.
 - 관련 자동화·스크립트 README에 이 기록을 연결했다. 이전 작업 기록과 보관용 YAML은 당시 사실을 보존했다.
 

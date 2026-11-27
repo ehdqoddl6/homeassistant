@@ -16,7 +16,7 @@
 
 | 항목 | 근거 |
 | --- | --- |
-| `sensor.yahoofinance_krw_x` | 기존 [아침 브리핑](../../automations/morning-briefing/automation.yaml)과 [일요일 브리핑](../../automations/sunday-briefing/automation.yaml)의 원달러 입력 |
+| `sensor.yahoofinance_krw_x` | 기존 [아침 브리핑](../../automations/morning-briefing/automation.yaml)과 [일요일 브리핑](../../automations/sunday-briefing/history/2026-11-27-before-merge.yaml)의 원달러 입력 |
 | `ai_task.google_ai_task` | 기존 브리핑 및 사용자 제공 버스 스크립트 |
 | `tts.google_ai_tts` → `media_player.geosil`, 음성 `Leda` | 기존 브리핑 및 사용자 제공 버스 스크립트 |
 
